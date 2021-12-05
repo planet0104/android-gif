@@ -18,8 +18,6 @@ android {
     defaultConfig {
         minSdk 22
         targetSdk 31
-        versionCode 1
-        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -41,12 +39,15 @@ dependencies {
 
 }
 //https://docs.gradle.org/current/userguide/publishing_maven.html
-publishing {
-    publications {
-        maven(MavenPublication) {
-            groupId = 'ccfish.run.android'
-            artifactId = 'gif'
-            version = '1.0'
+
+afterEvaluate {
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                groupId = 'ccfish.run.android'
+                artifactId = 'gif'
+                version = '1.0'
+            }
         }
     }
 }
