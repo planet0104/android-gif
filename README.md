@@ -7,14 +7,6 @@
 Android Gif Decoder
 
 
-build.gradle
-
-```gradle
-dependencies {
-    implementation 'com.github.planet0104:android-gif:1.0.3release2'
-}
-```
-
 settings.gradle
 
 ```gradle
@@ -24,6 +16,14 @@ dependencyResolutionManagement {
         //...
         maven { url 'https://jitpack.io' }
     }
+}
+```
+
+build.gradle
+
+```gradle
+dependencies {
+    implementation 'com.github.planet0104:android-gif:1.0.3release2'
 }
 ```
 
