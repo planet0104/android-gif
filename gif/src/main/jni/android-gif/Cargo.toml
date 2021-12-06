@@ -13,6 +13,7 @@ libc = "0.2.109"
 ndk = "0.5.0"
 ndk-sys = "0.2.2"
 anyhow = "1.0"
+raqote = { version="0.8.0", default_features = false }
 
 [dependencies.image]
 version = "0.23.14"
