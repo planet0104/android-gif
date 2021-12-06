@@ -7,6 +7,28 @@
 Android Gif Decoder
 
 
+build.gradle
+
+```gradle
+dependencies {
+    implementation 'com.github.planet0104:android-gif:1.0.3release2'
+}
+```
+
+settings.gradle
+
+```gradle
+dependencyResolutionManagement {
+    //...
+    repositories {
+        //...
+        maven { url 'https://jitpack.io' }
+    }
+}
+```
+
+MainActivity
+
 ```java
 public class MainActivity extends AppCompatActivity {
 
