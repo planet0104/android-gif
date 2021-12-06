@@ -2,7 +2,8 @@ plugins {
     id 'com.android.library'
     id 'maven-publish'
 }
-
+//https://www.jianshu.com/p/d4ceb8415688
+group = "com.github.planet0104"
 android {
 
     signingConfigs {
@@ -46,7 +47,7 @@ afterEvaluate {
             maven(MavenPublication) {
                 groupId = 'ccfish.run.android'
                 artifactId = 'gif'
-                version = '1.0'
+                version = '1.0.3'
             }
         }
     }
