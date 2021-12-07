@@ -23,7 +23,7 @@ build.gradle
 
 ```gradle
 dependencies {
-    implementation 'com.github.planet0104:android-gif:1.0.3release2'
+    implementation 'com.github.planet0104:android-gif:1.0.5'
 }
 ```
 
