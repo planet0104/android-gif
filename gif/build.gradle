@@ -17,7 +17,7 @@ android {
     compileSdk 31
 
     defaultConfig {
-        minSdk 22
+        minSdk 16
         targetSdk 31
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -48,7 +48,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'ccfish.run.android'
                 artifactId = 'gif'
-                version = '1.0.3'
+                version = '1.0.4'
             }
         }
     }

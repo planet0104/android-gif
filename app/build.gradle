@@ -15,7 +15,7 @@ android {
 
     defaultConfig {
         applicationId "run.ccfish.android.gif.test"
-        minSdk 22
+        minSdk 16
         targetSdk 31
         versionCode 1
         versionName "1.0"
