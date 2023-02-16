@@ -50,7 +50,6 @@ pub extern fn append_file_to_encoder(file: *const c_char, image_file: *const c_c
 #[no_mangle]
 pub extern fn append_bitmap_to_encoder(file: *const c_char, image_data: *const i32, len: i32) -> i32{
     init_log();
-    info!("append_bitmap_to_encoder file={:?} image_data={:?} len={len}", file, image_data);
     _append_bitmap_to_decoder(file, image_data, len)
     .map_err(|err|{
         error!("{:?}", err);
@@ -58,7 +57,18 @@ pub extern fn append_bitmap_to_encoder(file: *const c_char, image_data: *const i
     }).unwrap_or(-1)
 }
 
-//编码GIF图片
+//将BGR原始数据写入GIF文件中
+#[no_mangle]
+pub extern fn append_bgr_image_to_encoder(file: *const c_char, bgr_data: *const u8, len: i32) -> i32{
+    init_log();
+    _append_bgr_image_to_decoder(file, bgr_data, len)
+    .map_err(|err|{
+        error!("{:?}", err);
+        err
+    }).unwrap_or(-1)
+}
+
+//结束GIF编码
 #[no_mangle]
 pub extern fn close_decoder(file: *const c_char) -> i32{
     init_log();
@@ -133,6 +143,30 @@ fn _append_bitmap_to_decoder(file: *const c_char, image_data: *const i32, len: i
                 let argb = pixel.to_le_bytes();
                 //argb转换成rgba
                 let rgba_data = [argb[1], argb[2], argb[3], argb[0]];
+                pixel_data.extend_from_slice(&rgba_data);
+            }
+            let mut frame = Frame::from_rgba(encoder_info.width as u16, encoder_info.height as u16, &mut pixel_data);
+            frame.delay = 1000 / encoder_info.fps as u16 / 10; //设置帧率 10ms倍数
+            encoder_info.encoder.write_frame(&frame)?;
+            Ok(0)
+        }
+        None => Err(anyhow!("Eecoder不存在!"))
+    }
+}
+
+
+fn _append_bgr_image_to_decoder(file: *const c_char, bgr_data: *const u8, len: i32) -> Result<i32>{
+    let encoder_file_name = unsafe{ CStr::from_ptr(file).to_str()?.to_string() };
+    let mut encoders = ENCODERS.lock().map_err(|err| anyhow!("{:?}", err))?;
+    let encoders = encoders.borrow_mut();
+    match encoders.get_mut(&encoder_file_name){
+        Some(encoder_info) => {
+            
+            let bgr_pixels = unsafe{ slice::from_raw_parts(bgr_data, len as usize) };
+            let mut pixel_data = Vec::with_capacity((encoder_info.width * encoder_info.height) as usize * 4);
+            for bgr in bgr_pixels.chunks(3){
+                //bgr转换成rgba
+                let rgba_data = [bgr[2], bgr[1], bgr[0], 255];
                 pixel_data.extend_from_slice(&rgba_data);
             }
             let mut frame = Frame::from_rgba(encoder_info.width as u16, encoder_info.height as u16, &mut pixel_data);

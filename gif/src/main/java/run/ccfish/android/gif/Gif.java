@@ -49,6 +49,7 @@ public class Gif {
         int create_encoder(String file, boolean repeat, int width, int height, int fps);
         int append_file_to_encoder(String file, String image_file);
         int append_bitmap_to_encoder(String file, int[] colors, int size);
+        int append_bgr_image_to_encoder(String file, byte[] bgr_data, int size);
         int close_decoder(String file);
     }
 
@@ -131,6 +132,9 @@ public class Gif {
         int[] pixels = new int[w * h];
         bitmap.getPixels(pixels, 0, w, 0, 0, w, h);
         return GifSys.INSTANCE.append_bitmap_to_encoder(file, pixels, w*h);
+    }
+    public static int appendBGRImageToEncoder(String file, byte[] bgrByteArray){
+        return GifSys.INSTANCE.append_bgr_image_to_encoder(file, bgrByteArray, bgrByteArray.length);
     }
     public static int closeEncoder(String file){
         return GifSys.INSTANCE.close_decoder(file);
