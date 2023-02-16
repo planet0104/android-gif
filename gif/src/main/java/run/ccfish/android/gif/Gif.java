@@ -57,7 +57,7 @@ public class Gif {
      * @param input InputStream
      * @return Frame[]
      */
-    public static boolean decodeStream(InputStream input, OnFrameDataCallback decodeFrameCallback) throws IOException {
+    public static boolean decodeStream(InputStream input, boolean overlay, OnFrameDataCallback decodeFrameCallback) throws IOException {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         byte[] buffer = new byte[4096];
         int n = 0;
@@ -67,7 +67,7 @@ public class Gif {
         byte[] bytes = output.toByteArray();
         Pointer pointer = new Memory(bytes.length);
         pointer.write(0, bytes, 0, bytes.length);
-        return GifSys.INSTANCE.decode_bytes(pointer, bytes.length, true, (data, width, height) -> {
+        return GifSys.INSTANCE.decode_bytes(pointer, bytes.length, overlay, (data, width, height) -> {
             int[] colors = data.getIntArray(0, width*height);
             Bitmap bitmap = Bitmap.createBitmap(colors, width, height, Bitmap.Config.ARGB_8888);
             decodeFrameCallback.onFrameData(bitmap);
@@ -81,7 +81,29 @@ public class Gif {
      * @throws IOException Exception
      */
     public static boolean decodeUrl(String url, OnFrameDataCallback decodeFrameCallback) throws IOException {
-        return decodeStream(new URL(url).openStream(), decodeFrameCallback);
+        return decodeStream(new URL(url).openStream(), true, decodeFrameCallback);
+    }
+
+    /**
+     * Decode Image from URL
+     * @param url
+     * @param overlay
+     * @param decodeFrameCallback
+     * @return
+     * @throws IOException
+     */
+    public static boolean decodeUrl(String url, boolean overlay, OnFrameDataCallback decodeFrameCallback) throws IOException {
+        return decodeStream(new URL(url).openStream(), overlay, decodeFrameCallback);
+    }
+
+    /**
+     *
+     * @param file
+     * @param decodeFrameCallback
+     * @return
+     */
+    public static boolean decodeFile(File file, OnFrameDataCallback decodeFrameCallback) {
+        return decodeFile(file, true, decodeFrameCallback);
     }
 
     /**
@@ -89,8 +111,8 @@ public class Gif {
      * @param file File
      * @return Frame[]
      */
-    public static boolean decodeFile(File file, OnFrameDataCallback decodeFrameCallback) {
-        return GifSys.INSTANCE.decode_file(file.getAbsolutePath(),true, (data, width, height) -> {
+    public static boolean decodeFile(File file, boolean overlay, OnFrameDataCallback decodeFrameCallback) {
+        return GifSys.INSTANCE.decode_file(file.getAbsolutePath(),overlay, (data, width, height) -> {
             int[] colors = data.getIntArray(0, width*height);
             Bitmap bitmap = Bitmap.createBitmap(colors, width, height, Bitmap.Config.ARGB_8888);
             decodeFrameCallback.onFrameData(bitmap);

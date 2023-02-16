@@ -202,7 +202,7 @@ fn decode<R: Read>(decoder: Result<Decoder<R>>, overlay: bool, cb: DecodeCallbac
             //叠加绘制
             dt.draw_image_at(frame.left.into(), frame.top.into(), &bitmap, &DrawOptions::new());
             // get_data方法本身返回的是argb，所以直接转换成指针即可
-            cb(dt.get_data().as_ptr() as *const u8, frame.width as i32, frame.height as i32);
+            cb(dt.get_data().as_ptr() as *const u8, dt.width() as i32, dt.height() as i32);
         }
         Ok(0)
     }
