@@ -48,8 +48,10 @@ public class Gif {
         int decode_file(String file, boolean overlay, DecodeFrameCallback callback);
         int create_encoder(String file, boolean repeat, int width, int height, int fps);
         int append_file_to_encoder(String file, String image_file);
+        int append_file_bytes_to_encoder(String file, Pointer data, int size);
         int append_bitmap_to_encoder(String file, int[] colors, int size);
-        int append_bgr_image_to_encoder(String file, byte[] bgr_data, int size);
+        int append_bgr_image_to_encoder(String file, Pointer bgr_data, int size);
+        int append_rgb_image_to_encoder(String file, Pointer rgb_data, int size);
         int close_decoder(String file);
     }
 
@@ -133,8 +135,20 @@ public class Gif {
         bitmap.getPixels(pixels, 0, w, 0, 0, w, h);
         return GifSys.INSTANCE.append_bitmap_to_encoder(file, pixels, w*h);
     }
-    public static int appendBGRImageToEncoder(String file, byte[] bgrByteArray){
-        return GifSys.INSTANCE.append_bgr_image_to_encoder(file, bgrByteArray, bgrByteArray.length);
+    public static int appendBGRImageToEncoder(String file, byte[] bytes){
+        Pointer pointer = new Memory(bytes.length);
+        pointer.write(0, bytes, 0, bytes.length);
+        return GifSys.INSTANCE.append_bgr_image_to_encoder(file, pointer, bytes.length);
+    }
+    public static int appendRGBImageToEncoder(String file, byte[] bytes){
+        Pointer pointer = new Memory(bytes.length);
+        pointer.write(0, bytes, 0, bytes.length);
+        return GifSys.INSTANCE.append_bgr_image_to_encoder(file, pointer, bytes.length);
+    }
+    public static int appendFileToEncoder(String file, byte[] bytes){
+        Pointer pointer = new Memory(bytes.length);
+        pointer.write(0, bytes, 0, bytes.length);
+        return GifSys.INSTANCE.append_file_bytes_to_encoder(file, pointer, bytes.length);
     }
     public static int closeEncoder(String file){
         return GifSys.INSTANCE.close_decoder(file);
